@@ -13,8 +13,8 @@ the platform.
 
 The solution works well and managers are happy to be able to see their users
 submissions. After some time, managers are starting to doubt how long users take
-to complete the tasks. Instead of relying on the users to report them how long
-it took they want to see the numbers on the platform, when users sit down
+to complete the tasks. Instead of relying on the users to report how long
+it took, they want to see the numbers on the platform when the users sit down
 with their managers.
 
 ## Goal
