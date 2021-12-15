@@ -1,4 +1,8 @@
 # Time tracking
+The purpose of this exercise is for us to understand what kind of code you
+produce when solving a challenge. We are focusing on maintainability,
+your technical approach, how you map your idea into architecture and code,
+and what you prioritize with the limited time.
 
 ## Process
 - Timebox to ~4 hours development time.
@@ -13,18 +17,23 @@ the platform.
 
 The solution works well and managers are happy to be able to see their users
 submissions. After some time, managers are starting to doubt how long users take
-to complete the tasks. Instead of relying on the users to report how long
-it took, they want to see the numbers on the platform when the users sit down
+to complete the tasks. Instead of relying on the users to report them how long
+it took they want to see the numbers on the platform, when users sit down
 with their managers.
 
 ## Goal
 Implement an MVP that, after submitting a task, shows how long a user has been
-actively working on in. Users will go through their submission with the manager,
+actively working on it. Users will go through their submission with the manager,
 who wants to see the submission and the time it took to complete.
 Users work on tasks in multiple sessions: When the user takes a pause working on
 a task and comes back later, a new session starts.
 
-Add another screen that shows time statistics:
+Add information to the task submission screen that shows in seconds:
+- How long did it take the user to submit the task?
+- In how many sessions did the user work on the task?
+- How long was the user's average session for this task?
+
+Add another screen that shows time statistics in seconds:
 - How long has the user been working in total?
 - On average, how long did it take the user to submit a task?
 - How long is the user's average session?
@@ -52,5 +61,6 @@ Follow these steps to set up the project and get started:
 - You can change the code and project structure to suit your preference.
 - Users are using the latest version of Chrome/Firefox.
 - Users never open two tabs at the same time.
-- Users often switch between devices when starting a new session.
+- Users often switch between devices when starting a new session, but never use
+two devices at the same time.
 - Do not use additional 3rd party libraries.
