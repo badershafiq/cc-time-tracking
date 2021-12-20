@@ -45,9 +45,9 @@ class Api::V1::TasksController < Api::V1::ApiController
       {
         user_id: user_task.user_id,
         user_activity: {
-          total_time_taken: total_time_taken_for_task,
+          total_time_taken: total_time_taken_for_task(user_task),
           sessions_count: user_task.time_spent.size,
-          average_session: (user_task.time_spent.pluck(:time_taken).sum.to_f / user_task.time_spent.size).round(2),
+          average_session: (total_time_taken_for_task(user_task).to_f / user_task.time_spent.size).round(2),
         }
       }
     end
@@ -68,7 +68,7 @@ class Api::V1::TasksController < Api::V1::ApiController
     params[:id]
   end
 
-  def total_time_taken_for_task
+  def total_time_taken_for_task user_task
     user_task.time_spent.pluck(:time_taken).sum
   end
 

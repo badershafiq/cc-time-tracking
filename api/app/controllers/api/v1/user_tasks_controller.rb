@@ -5,6 +5,8 @@ class Api::V1::UserTasksController < Api::V1::ApiController
     @user_task.set_task_end_time if session_refreshed? # set end time for last session if task is refreshed
 
     @user_task.set_task_start_time
+
+    save_user_task
   end
 
   def set_end_time
