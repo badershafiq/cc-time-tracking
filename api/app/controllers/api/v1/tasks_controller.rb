@@ -38,6 +38,23 @@ class Api::V1::TasksController < Api::V1::ApiController
     )
   end
 
+  def task_summary
+    user_tasks = UserTask.where(task_id: task_id)
+
+    task_summary = user_tasks.map do |user_task|
+      {
+        user_id: user_task.user_id,
+        user_activity: {
+          total_time_taken: total_time_taken_for_task,
+          sessions_count: user_task.time_spent.size,
+          average_session: (user_task.time_spent.pluck(:time_taken).sum.to_f / user_task.time_spent.size).round(2),
+        }
+      }
+    end
+
+    render json: { success: true, data: task_summary }, status: 200
+  end
+
   private
 
   def task_params
@@ -49,6 +66,10 @@ class Api::V1::TasksController < Api::V1::ApiController
 
   def task_id
     params[:id]
+  end
+
+  def total_time_taken_for_task
+    user_task.time_spent.pluck(:time_taken).sum
   end
 
   def set_user_task

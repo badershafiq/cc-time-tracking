@@ -1,6 +1,7 @@
 import React from 'react';
 import { useBeforeunload } from 'react-beforeunload';
 import { Link, useParams } from 'react-router-dom';
+import TaskSummary from './TaskSummary';
 
 const TaskSubmit = props => {
   const { id: taskId } = useParams();
@@ -85,6 +86,7 @@ const TaskSubmit = props => {
                   <h3>Your answer</h3>
                   <hr />
                   <p>{task.answer}</p>
+                  <TaskSummary key={taskId} taskId={taskId} />
                 </>
               ) : (
                 <>
