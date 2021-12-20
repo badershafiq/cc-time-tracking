@@ -1,53 +1,80 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React from 'react'
+import { useBeforeunload } from 'react-beforeunload'
+import { Link, useParams } from 'react-router-dom'
+import TaskSummary from './TaskSummary'
 
-const TaskSubmit = props => {
-  const { id: taskId } = useParams();
-  const [task, setTask] = React.useState(null);
-  const [errors, setErrors] = React.useState(null);
-  const [answer, setAnswer] = React.useState('');
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+const TaskSubmit = () => {
+  const { id: taskId } = useParams()
+  const [task, setTask] = React.useState(null)
+  const [errors, setErrors] = React.useState(null)
+  const [answer, setAnswer] = React.useState('')
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  useBeforeunload(() => {
+    setEndTime(task.submitted)
+  })
 
   React.useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:5000/tasks/${taskId}`);
-      const result = await response.json();
-      setTask(result.data);
-    })();
-  }, [taskId]);
+      const response = await fetch(`http://localhost:5000/api/v1/tasks/${taskId}`)
+      const result = await response.json()
+      setTask(result.data)
+      setStartTime(result.data.id, result.data.submitted)
+    })()
+  }, [taskId])
+
+  const setStartTime = async (id, isSubmitted) => {
+    if (!isSubmitted) {
+      await fetch(`http://localhost:5000/api/v1/set_start_time/${id}`, {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: 1 })
+      })
+    }
+  }
+
+  const setEndTime = async isSubmitted => {
+    if (!isSubmitted) {
+      await fetch(`http://localhost:5000/api/v1/set_end_time/${taskId}`, {
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: 1 })
+      })
+    }
+  }
 
   const onChangeAnswer = React.useCallback(event =>
     setAnswer(event.target.value)
-  , []);
+  , [])
 
-  const onSubmitAnswer = React.useCallback(event => {
+  const onSubmitAnswer = React.useCallback(() => {
     (async () => {
-      setIsSubmitting(true);
+      setIsSubmitting(true)
 
-      const response = await fetch(`http://localhost:5000/tasks/${taskId}`, {
+      const response = await fetch(`http://localhost:5000/api/v1/tasks/${taskId}`, {
         method: 'put',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ task: { submitted: true, answer } })
-      });
-      const result = await response.json();
+        body: JSON.stringify({ task: { submitted: true, answer }, user_id: 1 })
+      })
+      const result = await response.json()
 
       if (result.success) {
-        setTask(result.data);
+        setTask(result.data)
       } else {
-        setErrors(JSON.stringify(result.errors));
+        setErrors(JSON.stringify(result.errors))
       }
 
-      setIsSubmitting(false);
-    })();
-  }, [taskId, answer]);
+      setIsSubmitting(false)
+    })()
+  }, [taskId, answer])
 
-  const isLoading = task === null;
+  const isLoading = task === null
   return isLoading
     ? 'Loading…'
     : (
       <>
         <div>
-          <Link to="/">Back</Link>
+          <Link to='/' onClick={() => setEndTime(task.submitted)}>Back</Link>
         </div>
         <div>
           <h1>{task.instructions}</h1>
@@ -59,12 +86,13 @@ const TaskSubmit = props => {
                   <h3>Your answer</h3>
                   <hr />
                   <p>{task.answer}</p>
+                  <TaskSummary key={taskId} taskId={taskId} />
                 </>
               ) : (
                 <>
                   <p>Submit your answer:</p>
                   <textarea
-                    rows="20"
+                    rows='20'
                     style={{ display: 'block', width: '80%' }}
                     onChange={onChangeAnswer}
                     value={answer}
@@ -79,6 +107,6 @@ const TaskSubmit = props => {
         </div>
       </>
     )
-};
+}
 
-export default TaskSubmit;
+export default TaskSubmit

@@ -64,3 +64,22 @@ Follow these steps to set up the project and get started:
 - Users often switch between devices when starting a new session, but never use
 two devices at the same time.
 - Do not use additional 3rd party libraries.
+
+## Assumptions while development
+Mentioning all assumptions and approaches that were followed for this task below.
+I hope they'll help in understanding code better
+
+### For frontend
+- Whenever user opens a task (which is not submitted yet), start time is saved in time_spent column in form of hash, and everytime if user refreshes, closes tab or go back, session ends and end_time and time difference is saved
+- Since we are not editing tasks, so for submitted tasks I am not storing time(session)
+- Task summary will only be visible on those tasks which are submitted by that user, for future development we can update in such a way only users with manager role will be able to view task summary screen
+- Sharing couple of edge cases which can be part of future development like if user is idle, switches to another tab or go back using browser back button
+- For idle case, when user lands on task submission page we store start time in a state, now every time our window receive mouse or keyboard event, we check if this event happening after x time, if it crosses that time we'll assume that user was idle they were not using our platform, if not then we'll continue with defined workflow
+- In case of tab change or browser back button, set end time for ongoing session (update {end_time} for time_spent column)
+
+### For backend
+- Added UserTask model in order to store time spent on task and sessions for that task
+- I've used an array type column (since sqlite does not support jsonb column type, jsonb column can also be used if we were working with postgresql)
+- In time_spent column single {start_time: '', end_time: '', time_taken: ''} represents user's session spent on a task
+- Saving start time and end time for every session, as it gives us more control over users activity, also saving time difference when user ends session
+- Every single hash in time_spent column, represents user session for that task
